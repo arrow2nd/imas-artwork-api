@@ -1,9 +1,8 @@
-import { CDList } from "../../libs/cd_list.ts";
-
-import { wait } from "../libs/util.ts";
-import { fetchHtml } from "../libs/fetch.ts";
-
 import { Document, ky } from "../../deps.ts";
+
+import { CDList } from "../libs/cd_list.ts";
+import { fetchHtml } from "../libs/fetch.ts";
+import { wait } from "../libs/util.ts";
 
 /**
  * タイトルを取得
@@ -12,40 +11,24 @@ import { Document, ky } from "../../deps.ts";
  * @returns CDタイトル
  */
 function getTitle(doc: Document, cdId: string): string {
-  const fmt = (text: string) => text.replace(/[　 \n]+/g, " ");
+  const fmt = (text: string) => text.replace(/[　 \n]+/g, " ").trim();
 
   /**
    * NOTE: 1ページに複数のCDが掲載されている場合があるので
    * まずそれを確かめて、無い場合はサイトタイトルから抽出する
    */
 
-  // 2021/10～の新サイト
-  const titleNew = doc.querySelector(
-    `.CD#${cdId} > .titleInfo > h1`
-  )?.textContent;
+  const selectors = [
+    `.CD#${cdId} > .titleInfo > h1`,
+    `.cinderella#${cdId} > .titleInfo > h2`,
+    ".cinderella > .titleInfo > h2",
+    `.discoTitle#${cdId} > .titleInfo > h2`,
+  ];
 
-  if (titleNew) return fmt(titleNew);
-
-  // 旧サイト（MASTER ARTIST 4 Series）
-  const titleMA4 = doc.querySelector(
-    `.cinderella#${cdId} > .titleInfo > h2`
-  )?.textContent;
-
-  if (titleMA4) return fmt(titleMA4);
-
-  // 一番上のCDタイトル（MASTER ARTIST 4 Series）
-  const titleMA4Top = doc.querySelector(
-    `.cinderella > .titleInfo > h2`
-  )?.textContent;
-
-  if (titleMA4Top) return fmt(titleMA4Top);
-
-  // 旧サイト（MASTER ARTIST 3 Series）
-  const titleMA3 = doc.querySelector(
-    `.discoTitle#${cdId} > .titleInfo > h2`
-  )?.textContent;
-
-  if (titleMA3) return fmt(titleMA3);
+  for (const selector of selectors) {
+    const title = doc.querySelector(selector)?.textContent;
+    if (title) return fmt(title);
+  }
 
   // サイトタイトルから抽出
   return fmt(doc.title.replace(/^アイドルマスター\s*[|｜]\s*/, ""));
@@ -68,14 +51,14 @@ async function fetchArtwork(cdId: string): Promise<string> {
  * @param pageUrl URL
  */
 export async function scrapeCdPage(pageUrl: string) {
-  const cdList = new CDList();
+  const cdList = new CDList("columbia");
 
   // URLからCDのIDを抽出
   const idMatched = pageUrl.match(/(?<A>(?:CO|XT)\S+)?\.html#?(?<B>CO\S+$)?/);
   const cdId = idMatched?.groups?.B || idMatched?.groups?.A;
 
   if (!cdId) {
-    console.log(`[SKIP] CDIDが抽出できませんでした (${pageUrl})`);
+    console.log(`[SKIP] IDが抽出できませんでした (${pageUrl})`);
     return undefined;
   }
 
@@ -106,12 +89,6 @@ export async function scrapeCdPage(pageUrl: string) {
     console.log(`[INFO] アートワークが見つかりませんでした (${pageUrl})`);
   }
 
-  console.log("-".repeat(25));
-  console.log(`CDID: ${cdId}`);
-  console.log(`タイトル: ${title}`);
-  console.log(`ページ URL: ${pageUrl}`);
-  console.log(`アートワーク画像 URL: ${artworkUrl}`);
-
   // 追加して保存
   cdList.add({
     id: cdId,
@@ -119,6 +96,4 @@ export async function scrapeCdPage(pageUrl: string) {
     page: pageUrl,
     artwork: artworkUrl,
   });
-
-  cdList.write();
 }
