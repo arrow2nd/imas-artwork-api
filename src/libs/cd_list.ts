@@ -1,12 +1,24 @@
-import type { CD } from "../types/cd.ts";
-
-const jsonPath = "./src/data/list.json";
+import type { Genre, CD } from "../types/cd.ts";
 
 export class CDList {
-  private _list = [] as CD[];
+  protected _jsonPath = "";
+  protected _list = [] as CD[];
 
-  constructor() {
-    this._list = JSON.parse(Deno.readTextFileSync(jsonPath));
+  /**
+   * @param genre 読み込むジャンル
+   */
+  constructor(genre?: Genre) {
+    const genreToload: Genre[] = genre
+      ? [genre]
+      : ["columbia", "million", "shiny", "sidem"];
+
+    // それぞれのデータを読み込んで結合
+    for (const genre of genreToload) {
+      this._jsonPath = `./src/data/${genre}.json`;
+      this._list = this._list.concat(
+        JSON.parse(Deno.readTextFileSync(this._jsonPath))
+      );
+    }
   }
 
   /**
@@ -25,24 +37,5 @@ export class CDList {
    */
   public searchByTitle(keyword: string): CD[] | undefined {
     return this._list.filter(({ title }) => title.includes(keyword));
-  }
-
-  /**
-   * 新規CDデータを追加
-   * @param newCd CDデータ
-   */
-  public add(newCd: CD) {
-    // 重複確認
-    if (this.searchById(newCd.id)) return;
-
-    this._list.push(newCd);
-  }
-
-  /**
-   * JSONファイルに書き込む
-   */
-  public write() {
-    const json = JSON.stringify(this._list, null, "\t");
-    Deno.writeTextFileSync(jsonPath, json);
   }
 }
