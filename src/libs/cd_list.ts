@@ -1,15 +1,6 @@
-const jsonPath = "./src/data/list.json";
+import type { CD } from "../types/cd.ts";
 
-export type CD = {
-  /** CDID */
-  id: string;
-  /** タイトル */
-  title: string;
-  /** ページURL */
-  page: string;
-  /** アートワークURL */
-  artwork: string;
-};
+const jsonPath = "./src/data/list.json";
 
 export class CDList {
   private _list = [] as CD[];
