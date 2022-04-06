@@ -1,4 +1,4 @@
-import { DOMParser } from "./deps.ts";
+import { DOMParser, Document, ky } from "../../deps.ts";
 
 /**
  * UTF-8のHTML文字列を取得
@@ -15,25 +15,22 @@ async function getHtmlUtf8(res: Response) {
     : text;
 }
 
+type FetchHtmlResult = {
+  html: string;
+  doc: Document;
+};
+
 /**
- * URLからDocumentオブジェクトを取得
+ * URLからHTML・Documentを取得
  * @param url URL
  * @returns Document
  */
-export async function fetchHtmlDocment(url: string) {
-  // 5秒でタイムアウト
-  const ctrl = new AbortController();
-  const id = setTimeout(() => ctrl.abort(), 5000);
-
-  const res = await fetch(url, { signal: ctrl.signal }).catch(() => {
-    throw new Error("通信がタイムアウトしました");
-  });
-
-  clearTimeout(id);
-
+export async function fetchHtml(url: string): Promise<FetchHtmlResult> {
+  const res = await ky.get(url, { timeout: 5000 });
   const html = await getHtmlUtf8(res);
+
   const doc = new DOMParser().parseFromString(html, "text/html");
   if (!doc) throw new Error("HTMLの解析に失敗しました");
 
-  return doc;
+  return { html, doc };
 }

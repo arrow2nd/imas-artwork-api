@@ -1,0 +1,5 @@
+{
+  "tasks": {
+    "fetch:columbia": "deno run -A ./src/tools/columbia/main.ts"
+  }
+}
