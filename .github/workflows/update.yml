@@ -1,0 +1,27 @@
+name: update
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 日本時間のお昼12時
+    - cron: "0 3 * * *"
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Update CD data
+        run: deno task fetch
+
+      - name: Commit the changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore: 新規アートワークデータを追加"
