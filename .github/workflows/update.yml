@@ -21,7 +21,10 @@ jobs:
       - name: Update CD data
         run: deno task fetch
 
+      - name: Format data
+        run: deno task fmt
+
       - name: Commit the changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "chore: 新規アートワークデータを追加"
+          commit_message: "chore: 新規データを追加"
