@@ -1,4 +1,4 @@
-export type CDType = "columbia" | "million" | "sidem" | "shiny";
+export type Genre = "columbia" | "million" | "sidem" | "shiny";
 
 export type CD = {
   /** CDID */

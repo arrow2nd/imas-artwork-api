@@ -1,20 +1,19 @@
 import type { Element } from "../../deps.ts";
 
-import { CDList } from "../libs/cd_list.ts";
+import { DevCDList } from "../libs/dev_cd_list.ts";
 
 /**
- * CDの詳細をパースする
+ * リンク要素をパースする
  * @param aElm aタグ
  */
-export function parseCdInfo(aElm: Element) {
-  const cdList = new CDList("shiny");
-
+export function parseLinkElement(aElm: Element) {
+  const cdList = new DevCDList("shiny");
   const errOut = aElm.innerHTML;
 
-  // ページリンクを抽出
+  // 詳細ページのリンクを抽出
   const pageUrl = aElm.getAttribute("href");
   if (!pageUrl) {
-    throw new Error(`ページリンクが抽出できませんでした (${errOut})`);
+    throw new Error(`詳細ページのリンクが抽出できませんでした (${errOut})`);
   }
 
   // IDを抽出

@@ -1,19 +1,19 @@
 import { fetchHtml } from "../libs/fetch.ts";
 
-import { scrapeCdPage } from "./cd_page.ts";
+import { scrapeCdPage } from "./scrape.ts";
 
 const baseUrl = "https://columbia.jp/idolmaster/";
 const { doc } = await fetchHtml(baseUrl + "index.html");
 
-// ジャケットリンクを抽出
-const jacketLinks = [...doc.querySelectorAll(".jacketLink")].map((e) =>
+// 詳細ページへのリンクを抽出
+const detailPages = [...doc.querySelectorAll(".jacketLink")].map((e) =>
   e.parentElement?.getAttribute("href")
 );
 
-console.log(`[OK] ジャケットリンク取得完了 (${jacketLinks.length} 件)`);
+console.log(`[OK] 詳細ページのリンク取得完了 (${detailPages.length} 件)`);
 
 // 各ページに対して処理
-for (const link of jacketLinks) {
+for (const link of detailPages) {
   if (typeof link !== "string") continue;
 
   const pageUrl = new URL(link, baseUrl).href;

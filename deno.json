@@ -4,6 +4,6 @@
     "fetch:columbia": "deno run -A ./src/tools/columbia/main.ts",
     "fetch:lantis": "deno run -A ./src/tools/lantis/main.ts",
     "fetch:shiny": "deno run -A ./src/tools/shiny/main.ts",
-    "fmt:data": "deno fmt ./src/data/"
+    "fmt": "deno fmt ./src/data/"
   }
 }

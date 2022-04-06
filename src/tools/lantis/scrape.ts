@@ -1,8 +1,8 @@
-import type { CDType } from "../../types/cd.ts";
+import type { Genre } from "../../types/cd.ts";
 
 import { Document } from "../../deps.ts";
 
-import { CDList } from "../libs/cd_list.ts";
+import { DevCDList } from "../libs/dev_cd_list.ts";
 import { fetchHtml } from "../libs/fetch.ts";
 import { wait } from "../libs/util.ts";
 
@@ -58,17 +58,17 @@ function getArtworkUrl(pageUrl: string, doc: Document): string | undefined {
 
 /**
  * CD詳細ページをスクレイピングする
- * @param type CDのタイプ
+ * @param genre ジャンル
  * @param baseUrl ベースURL
  * @param pagePath CDページへの相対パス
  */
 export async function scrapeCdPage(
-  type: CDType,
+  genre: Genre,
   baseUrl: string,
   pagePath: string
 ) {
   const pageUrl = new URL(pagePath, baseUrl).href;
-  const cdList = new CDList(type);
+  const cdList = new DevCDList(genre);
 
   // URLからIDを抽出
   const cdId = pageUrl.match(/release_(\S+)\.html$/)?.[1];
@@ -84,7 +84,7 @@ export async function scrapeCdPage(
     return;
   }
 
-  // CDページを取得
+  // 詳細ページを取得
   const { doc } = await fetchHtml(pageUrl);
   await wait(5);
 
@@ -95,7 +95,7 @@ export async function scrapeCdPage(
     throw new Error(`タイトルが抽出できませんでした (${pageUrl})`);
   }
 
-  // アートワーク画像のURLを抽出
+  // アートワークのURLを抽出
   const artworkUrl = getArtworkUrl(pageUrl, doc);
 
   if (artworkUrl?.includes("nowprinting")) {

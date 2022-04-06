@@ -1,6 +1,6 @@
 import { Document, ky } from "../../deps.ts";
 
-import { CDList } from "../libs/cd_list.ts";
+import { DevCDList } from "../libs/dev_cd_list.ts";
 import { fetchHtml } from "../libs/fetch.ts";
 import { wait } from "../libs/util.ts";
 
@@ -33,7 +33,7 @@ function getTitle(doc: Document, cdId: string): string {
 }
 
 /**
- * アートワーク画像を取得（コロムビア公式通販）
+ * コロムビア公式サイトからアートワークを取得
  * @param cdId CDID
  * @returns ジャケットURL
  */
@@ -45,11 +45,11 @@ async function fetchArtwork(cdId: string): Promise<string> {
 }
 
 /**
- * CD詳細ページをスクレイピングする
+ * CD詳細ページをスクレイピング
  * @param pageUrl URL
  */
 export async function scrapeCdPage(pageUrl: string) {
-  const cdList = new CDList("columbia");
+  const cdList = new DevCDList("columbia");
 
   // URLからCDのIDを抽出
   const idMatched = pageUrl.match(/(?<A>(?:CO|XT)\S+)?\.html#?(?<B>CO\S+$)?/);
@@ -66,14 +66,14 @@ export async function scrapeCdPage(pageUrl: string) {
     return;
   }
 
-  // CDページを取得
+  // 詳細ページを取得
   const { html, doc } = await fetchHtml(pageUrl);
   await wait(5);
 
   // タイトルを抽出
   const title = getTitle(doc, cdId);
 
-  // アートワーク画像のURLを抽出
+  // アートワークのURLを抽出
   const imagePath = html.match(
     new RegExp(`\(\(\?\:images\?\|img\)\/${cdId}.\(\?\:jpg\|png\)\)`)
   )?.[1];

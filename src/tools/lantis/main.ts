@@ -1,9 +1,10 @@
-import type { CDType } from "../../types/cd.ts";
+import type { Genre } from "../../types/cd.ts";
 
 import { fetchHtml } from "../libs/fetch.ts";
-import { scrapeCdPage } from "./cd_page.ts";
 
-for (const type of ["million", "sidem"] as CDType[]) {
+import { scrapeCdPage } from "./scrape.ts";
+
+for (const type of ["million", "sidem"] as Genre[]) {
   const basePath = type === "million" ? "imas" : type;
   const baseUrl = `https://www.lantis.jp/${basePath}/`;
 
@@ -12,18 +13,18 @@ for (const type of ["million", "sidem"] as CDType[]) {
 
   console.log(`[OK] メインページ取得完了 (${baseUrl})`);
 
-  // ジャケットリンクを抽出
-  const jacketLinks = doc
+  // 詳細ページへのリンクを取得
+  const detailPages = doc
     .getElementsByClassName("dsc_box")
     .map((e) =>
       e.getElementsByTagName("a").map((e) => e.getAttribute("href") || "")
     )
     .flat();
 
-  console.log(`[OK] ジャケットリンク取得完了 (${jacketLinks.length} 件)`);
+  console.log(`[OK] 詳細ページへのリンク取得完了 (${detailPages.length} 件)`);
 
   // 各ページに対して処理
-  for (const pagePath of jacketLinks) {
+  for (const pagePath of detailPages) {
     if (typeof pagePath !== "string") continue;
 
     await scrapeCdPage(type, baseUrl, pagePath);
