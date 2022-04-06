@@ -12,10 +12,10 @@ const jacketLinks = [...doc.querySelectorAll(".jacketLink")].map((e) =>
 
 console.log(`[OK] ジャケットリンク取得完了 (${jacketLinks.length} 件)`);
 
-for (const url of jacketLinks) {
-  if (typeof url !== "string") continue;
+for (const link of jacketLinks) {
+  if (typeof link !== "string") continue;
 
-  const pageUrl = /^https/.test(url) ? url : baseUrl + url;
+  const pageUrl = new URL(link, baseUrl).href;
   await scrapeCdPage(pageUrl);
 }
 
