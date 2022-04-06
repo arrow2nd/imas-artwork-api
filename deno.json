@@ -1,6 +1,6 @@
 {
   "tasks": {
     "fetch:columbia": "deno run -A ./src/tools/columbia/main.ts",
-    "fetch:million": "deno run -A ./src/tools/million/main.ts"
+    "fetch:lantis": "deno run -A ./src/tools/lantis/main.ts"
   }
 }

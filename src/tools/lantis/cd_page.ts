@@ -1,3 +1,5 @@
+import type { CDType } from "../../types/cd.ts";
+
 import { Document } from "../../deps.ts";
 
 import { CDList } from "../libs/cd_list.ts";
@@ -13,7 +15,7 @@ function getTitle(doc: Document): string | undefined {
   const fmt = (text: string) => {
     return text
       .replace(/(^\S*『.+?』\S*\n|タイトル[:：]|)/g, "")
-      .replace(/[　 \n]+/g, " ")
+      .replace(/[　 \n\u00a0]+/g, " ")
       .trim();
   };
 
@@ -33,15 +35,22 @@ function getTitle(doc: Document): string | undefined {
 
 /**
  * アートワーク画像のパスを取得
+ * @param pageUrl ページURL
  * @param doc ドキュメント
  * @returns ジャケットURL
  */
-function getArtworkPath(doc: Document): string | undefined {
-  const selectors = [".release_img > img", "#release > img"];
+function getArtworkUrl(pageUrl: string, doc: Document): string | undefined {
+  const selectors = [
+    ".release_img > img",
+    "#release > img",
+    ".release_box > p > img",
+  ];
+
+  // NOTE: imagePathは相対パスの場合があるので、URLクラスで絶対パスに変換
 
   for (const selector of selectors) {
     const imagePath = doc.querySelector(selector)?.getAttribute("src");
-    if (imagePath) return imagePath;
+    if (imagePath) return new URL(imagePath, pageUrl).href;
   }
 
   return undefined;
@@ -49,10 +58,17 @@ function getArtworkPath(doc: Document): string | undefined {
 
 /**
  * CD詳細ページをスクレイピングする
- * @param pageUrl URL
+ * @param type CDのタイプ
+ * @param baseUrl ベースURL
+ * @param pagePath CDページへの相対パス
  */
-export async function scrapeCdPage(pageUrl: string) {
-  const cdList = new CDList("million");
+export async function scrapeCdPage(
+  type: CDType,
+  baseUrl: string,
+  pagePath: string
+) {
+  const pageUrl = new URL(pagePath, baseUrl).href;
+  const cdList = new CDList(type);
 
   // URLからIDを抽出
   const cdId = pageUrl.match(/release_(\S+)\.html$/)?.[1];
@@ -80,21 +96,20 @@ export async function scrapeCdPage(pageUrl: string) {
   }
 
   // アートワーク画像のURLを抽出
-  const imagePath = getArtworkPath(doc);
+  const artworkUrl = getArtworkUrl(pageUrl, doc);
 
-  if (!imagePath) {
+  if (artworkUrl?.includes("nowprinting")) {
+    console.log(`[SKIP] アートワークがまだありません (${pageUrl})`);
+    return;
+  } else if (!artworkUrl) {
     console.log(`[INFO] アートワークが見つかりませんでした (${pageUrl})`);
   }
-
-  const artworkUrl = imagePath
-    ? pageUrl.replace(/[^/]+\.html$/, imagePath)
-    : "";
 
   // 追加して保存
   cdList.add({
     id: cdId,
     title: title || "",
     page: pageUrl,
-    artwork: artworkUrl,
+    artwork: artworkUrl || "",
   });
 }

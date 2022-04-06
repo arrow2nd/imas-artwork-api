@@ -26,7 +26,7 @@ type FetchHtmlResult = {
  * @returns Document
  */
 export async function fetchHtml(url: string): Promise<FetchHtmlResult> {
-  const res = await ky.get(url, { timeout: 5000 });
+  const res = await ky.get(url, { timeout: 5000, throwHttpErrors: false });
   const html = await getHtmlUtf8(res);
 
   const doc = new DOMParser().parseFromString(html, "text/html");

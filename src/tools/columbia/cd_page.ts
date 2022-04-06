@@ -13,10 +13,8 @@ import { wait } from "../libs/util.ts";
 function getTitle(doc: Document, cdId: string): string {
   const fmt = (text: string) => text.replace(/[　 \n]+/g, " ").trim();
 
-  /**
-   * NOTE: 1ページに複数のCDが掲載されている場合があるので
-   * まずそれを確かめて、無い場合はサイトタイトルから抽出する
-   */
+  // NOTE: 1ページに複数のCDが掲載されている場合があるので
+  // まずそれを確かめて、無い場合はサイトタイトルから抽出する
 
   const selectors = [
     `.CD#${cdId} > .titleInfo > h1`,
@@ -82,7 +80,7 @@ export async function scrapeCdPage(pageUrl: string) {
 
   // 見つからない場合、コロムビア公式通販を参照する
   const artworkUrl = imagePath
-    ? pageUrl.replace(/[^/]+\.html(#.+)?$/, imagePath)
+    ? new URL(imagePath, pageUrl).href
     : await fetchArtwork(cdId);
 
   if (artworkUrl === "") {
