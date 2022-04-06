@@ -20,7 +20,14 @@ export function parseCdInfo(aElm: Element) {
   // IDを抽出
   const cdId = pageUrl?.match(/(L[A-Z]{2,3}-[^/]+)\/?$/i)?.[1].toUpperCase();
   if (!cdId) {
-    throw new Error(`IDが抽出できませんでした (${errOut})`);
+    console.log(`[SKIP] IDが抽出できませんでした (${pageUrl})`);
+    return;
+  }
+
+  // 重複を確認
+  if (cdList.searchById(cdId)) {
+    console.log(`[SKIP] 既に登録されています (${pageUrl})`);
+    return;
   }
 
   // タイトルを抽出

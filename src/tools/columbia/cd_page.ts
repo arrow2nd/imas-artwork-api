@@ -57,13 +57,13 @@ export async function scrapeCdPage(pageUrl: string) {
 
   if (!cdId) {
     console.log(`[SKIP] IDが抽出できませんでした (${pageUrl})`);
-    return undefined;
+    return;
   }
 
   // 重複を確認
   if (cdList.searchById(cdId)) {
     console.log(`[SKIP] 既に登録されています (${pageUrl})`);
-    return undefined;
+    return;
   }
 
   // CDページを取得
@@ -84,7 +84,7 @@ export async function scrapeCdPage(pageUrl: string) {
     : await fetchArtwork(cdId);
 
   if (artworkUrl === "") {
-    console.log(`[INFO] アートワークが見つかりませんでした (${pageUrl})`);
+    throw new Error(`アートワークが見つかりませんでした (${pageUrl})`);
   }
 
   // 追加して保存

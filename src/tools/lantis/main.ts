@@ -4,9 +4,8 @@ import { fetchHtml } from "../libs/fetch.ts";
 import { scrapeCdPage } from "./cd_page.ts";
 
 for (const type of ["million", "sidem"] as CDType[]) {
-  const baseUrl = `https://www.lantis.jp/${
-    type === "million" ? "imas" : type
-  }/`;
+  const basePath = type === "million" ? "imas" : type;
+  const baseUrl = `https://www.lantis.jp/${basePath}/`;
 
   // メインページを取得
   const { doc } = await fetchHtml(baseUrl);

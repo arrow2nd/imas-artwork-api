@@ -12,6 +12,7 @@ const jacketLinks = [...doc.querySelectorAll(".jacketLink")].map((e) =>
 
 console.log(`[OK] ジャケットリンク取得完了 (${jacketLinks.length} 件)`);
 
+// 各ページに対して処理
 for (const link of jacketLinks) {
   if (typeof link !== "string") continue;
 

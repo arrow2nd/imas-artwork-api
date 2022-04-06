@@ -75,13 +75,13 @@ export async function scrapeCdPage(
 
   if (!cdId) {
     console.log(`[SKIP] IDが抽出できませんでした (${pageUrl})`);
-    return undefined;
+    return;
   }
 
   // 重複を確認
   if (cdList.searchById(cdId)) {
     console.log(`[SKIP] 既に登録されています (${pageUrl})`);
-    return undefined;
+    return;
   }
 
   // CDページを取得
@@ -92,7 +92,7 @@ export async function scrapeCdPage(
   const title = getTitle(doc);
 
   if (!title) {
-    console.log(`[INFO] タイトルが抽出できませんでした (${pageUrl})`);
+    throw new Error(`タイトルが抽出できませんでした (${pageUrl})`);
   }
 
   // アートワーク画像のURLを抽出
@@ -102,7 +102,7 @@ export async function scrapeCdPage(
     console.log(`[SKIP] アートワークがまだありません (${pageUrl})`);
     return;
   } else if (!artworkUrl) {
-    console.log(`[INFO] アートワークが見つかりませんでした (${pageUrl})`);
+    throw new Error(`アートワークが見つかりませんでした (${pageUrl})`);
   }
 
   // 追加して保存
