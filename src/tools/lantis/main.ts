@@ -1,34 +1,44 @@
-import type { Genre } from "../../types/cd.ts";
+import { fetchHtml } from "../../libs/fetch.ts";
 
-import { fetchHtml } from "../libs/fetch.ts";
+import { Artwork } from "../../models/artworks.ts";
 
 import { scrapeCdPage } from "./scrape.ts";
 
-for (const type of ["million", "sidem"] as Genre[]) {
-  const basePath = type === "million" ? "imas" : type;
-  const baseUrl = `https://www.lantis.jp/${basePath}/`;
+export async function updateLantis(ids: string[]) {
+  const addArtworks = [] as Artwork[];
 
-  // メインページを取得
-  const { doc } = await fetchHtml(baseUrl);
+  for (const path of ["imas", "sidem"]) {
+    const baseUrl = `https://www.lantis.jp/${path}/`;
 
-  console.log(`[OK] メインページ取得完了 (${baseUrl})`);
+    // メインページを取得
+    const res = await fetchHtml(baseUrl);
+    if (!res) continue;
 
-  // 詳細ページへのリンクを取得
-  const detailPages = doc
-    .getElementsByClassName("dsc_box")
-    .map((e) =>
-      e.getElementsByTagName("a").map((e) => e.getAttribute("href") || "")
-    )
-    .flat();
+    console.log(`[OK] メインページ取得完了 (${baseUrl})`);
 
-  console.log(`[OK] 詳細ページへのリンク取得完了 (${detailPages.length} 件)`);
+    // 詳細ページへのリンクを取得
+    const detailPages = res.doc
+      .getElementsByClassName("dsc_box")
+      .map((e) =>
+        e.getElementsByTagName("a").map((e) => e.getAttribute("href") || "")
+      )
+      .flat();
 
-  // 各ページに対して処理
-  for (const pagePath of detailPages) {
-    if (typeof pagePath !== "string") continue;
+    console.log(`[OK] 詳細ページへのリンク取得完了 (${detailPages.length} 件)`);
 
-    await scrapeCdPage(type, baseUrl, pagePath);
+    // 各ページに対して処理
+    for (const pagePath of detailPages) {
+      if (typeof pagePath !== "string") continue;
+
+      const result = await scrapeCdPage(ids, baseUrl, pagePath);
+
+      if (result) {
+        addArtworks.push(result);
+      }
+    }
+
+    console.log(`[SUCCESS: ${path}]`);
   }
-}
 
-console.log(`[SUCCESS]`);
+  return addArtworks;
+}

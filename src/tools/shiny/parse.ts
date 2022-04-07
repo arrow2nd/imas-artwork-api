@@ -1,31 +1,34 @@
 import type { Element } from "../../deps.ts";
 
-import { DevCDList } from "../libs/dev_cd_list.ts";
+import { Artwork } from "../../models/artworks.ts";
 
 /**
  * リンク要素をパースする
+ * @param ids ID配列
  * @param aElm aタグ
  */
-export function parseLinkElement(aElm: Element) {
-  const cdList = new DevCDList("shiny");
+export function parseLinkElement(
+  ids: string[],
+  aElm: Element
+): Artwork | undefined {
   const errOut = aElm.innerHTML;
 
   // 詳細ページのリンクを抽出
-  const pageUrl = aElm.getAttribute("href");
-  if (!pageUrl) {
+  const website = aElm.getAttribute("href");
+  if (!website) {
     throw new Error(`詳細ページのリンクが抽出できませんでした (${errOut})`);
   }
 
   // IDを抽出
-  const cdId = pageUrl?.match(/(L[A-Z]{2,3}-[^/]+)\/?$/i)?.[1].toUpperCase();
+  const cdId = website?.match(/(L[A-Z]{2,3}-[^_/]+)/i)?.[1].toUpperCase();
   if (!cdId) {
-    console.log(`[SKIP] IDが抽出できませんでした (${pageUrl})`);
+    console.log(`[SKIP] IDが抽出できませんでした (${website})`);
     return;
   }
 
   // 重複を確認
-  if (cdList.searchById(cdId)) {
-    console.log(`[SKIP] 既に登録されています (${pageUrl})`);
+  if (ids.find((id) => id === cdId)) {
+    console.log(`[SKIP] 既に登録されています (${website})`);
     return;
   }
 
@@ -36,20 +39,26 @@ export function parseLinkElement(aElm: Element) {
   }
 
   // アートワークを抽出
-  const artworkUrl = aElm.querySelector("img")?.getAttribute("src");
+  const image = aElm.querySelector("img")?.getAttribute("src");
 
-  if (artworkUrl?.includes("nowprinting")) {
+  if (image?.includes("nowprinting")) {
     console.log(`[SKIP] アートワークがまだありません (${errOut})`);
     return;
-  } else if (!artworkUrl) {
+  } else if (!image) {
     throw new Error(`アートワークが見つかりませんでした (${errOut})`);
   }
 
+  console.log("-".repeat(25));
+  console.log(`ID: ${cdId}`);
+  console.log(`タイトル: ${title}`);
+  console.log(`Webサイト: ${website}`);
+  console.log(`アートワーク: ${image}`);
+
   // 追加して保存
-  cdList.add({
-    id: cdId,
+  return Artwork.create({
+    _id: cdId,
     title: title || "",
-    website: pageUrl,
-    artwork: artworkUrl || "",
+    website,
+    image: image || "",
   });
 }
