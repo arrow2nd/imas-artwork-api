@@ -18,13 +18,8 @@ jobs:
         with:
           deno-version: v1.x
 
-      - name: Update CD data
-        run: deno task fetch
-
-      - name: Format data
-        run: deno task fmt
-
-      - name: Commit the changes
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: "chore: 新規データを追加"
+      - name: Update Artwork data
+        run: deno task update
+        env:
+          MONGO_DB_URL: ${{ secrets.MONGO_DB_URL }}
+          MONGO_DB_NAME: ${{ secrets.MONGO_DB_NAME }}
