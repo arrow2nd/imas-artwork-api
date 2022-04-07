@@ -1,8 +1,9 @@
 import { Document, ky } from "../../deps.ts";
 
-import { DevCDList } from "../libs/dev_cd_list.ts";
-import { fetchHtml } from "../libs/fetch.ts";
-import { wait } from "../libs/util.ts";
+import { fetchHtml } from "../../libs/fetch.ts";
+import { wait } from "../../libs/util.ts";
+
+import { Artwork } from "../../models/artworks.ts";
 
 /**
  * タイトルを取得
@@ -46,52 +47,62 @@ async function fetchArtwork(cdId: string): Promise<string> {
 
 /**
  * CD詳細ページをスクレイピング
- * @param pageUrl URL
+ * @param ids ID配列
+ * @param website URL
+ * @returns アートワークデータ
  */
-export async function scrapeCdPage(pageUrl: string) {
-  const cdList = new DevCDList("columbia");
-
+export async function scrapeCdPage(
+  ids: string[],
+  website: string
+): Promise<Artwork | undefined> {
   // URLからCDのIDを抽出
-  const idMatched = pageUrl.match(/(?<A>(?:CO|XT)\S+)?\.html#?(?<B>CO\S+$)?/);
+  const idMatched = website.match(/(?<A>(?:CO|XT)\S+)?\.html#?(?<B>CO\S+$)?/);
   const cdId = idMatched?.groups?.B || idMatched?.groups?.A;
 
   if (!cdId) {
-    console.log(`[SKIP] IDが抽出できませんでした (${pageUrl})`);
+    console.log(`[SKIP] IDが抽出できませんでした (${website})`);
     return;
   }
 
   // 重複を確認
-  if (cdList.searchById(cdId)) {
-    console.log(`[SKIP] 既に登録されています (${pageUrl})`);
+  if (ids.find((id) => id === cdId)) {
+    console.log(`[SKIP] 既に登録されています (${website})`);
     return;
   }
 
   // 詳細ページを取得
-  const { html, doc } = await fetchHtml(pageUrl);
+  const res = await fetchHtml(website);
+  if (!res) return;
+
   await wait(5);
 
   // タイトルを抽出
-  const title = getTitle(doc, cdId);
+  const title = getTitle(res.doc, cdId);
 
   // アートワークのURLを抽出
-  const imagePath = html.match(
+  const imagePath = res.html.match(
     new RegExp(`\(\(\?\:images\?\|img\)\/${cdId}.\(\?\:jpg\|png\)\)`)
   )?.[1];
 
   // 見つからない場合、コロムビア公式通販を参照する
-  const artworkUrl = imagePath
-    ? new URL(imagePath, pageUrl).href
+  const image = imagePath
+    ? new URL(imagePath, website).href
     : await fetchArtwork(cdId);
 
-  if (artworkUrl === "") {
-    throw new Error(`アートワークが見つかりませんでした (${pageUrl})`);
+  if (image === "") {
+    throw new Error(`アートワークが見つかりませんでした (${website})`);
   }
 
-  // 追加して保存
-  cdList.add({
-    id: cdId,
-    title,
-    page: pageUrl,
-    artwork: artworkUrl,
+  console.log("-".repeat(25));
+  console.log(`ID: ${cdId}`);
+  console.log(`タイトル: ${title}`);
+  console.log(`Webサイト: ${website}`);
+  console.log(`アートワーク: ${image}`);
+
+  return Artwork.create({
+    _id: cdId,
+    title: title || "",
+    website,
+    image: image || "",
   });
 }

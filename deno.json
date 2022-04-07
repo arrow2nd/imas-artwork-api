@@ -1,9 +1,7 @@
 {
   "tasks": {
-    "fetch": "deno task fetch:columbia && deno task fetch:lantis && deno task fetch:shiny",
-    "fetch:columbia": "deno run -A ./src/tools/columbia/main.ts",
-    "fetch:lantis": "deno run -A ./src/tools/lantis/main.ts",
-    "fetch:shiny": "deno run -A ./src/tools/shiny/main.ts",
-    "fmt": "deno fmt ./src/data/"
+    "start": "deno run --allow-net --allow-read --allow-env ./src/server.ts",
+    "dev": "deno run --allow-net --allow-read --allow-env --watch ./src/server.ts",
+    "update": "deno run --allow-net --allow-read --allow-env ./src/tools/update.ts"
   }
 }

@@ -1,4 +1,4 @@
-import { DOMParser, Document, ky } from "../../deps.ts";
+import { DOMParser, Document, ky } from "../deps.ts";
 
 /**
  * UTF-8のHTML文字列を取得
@@ -25,12 +25,28 @@ type FetchHtmlResult = {
  * @param url URL
  * @returns Document
  */
-export async function fetchHtml(url: string): Promise<FetchHtmlResult> {
-  const res = await ky.get(url, { timeout: 5000, throwHttpErrors: false });
-  const html = await getHtmlUtf8(res);
+export async function fetchHtml(
+  url: string
+): Promise<FetchHtmlResult | undefined> {
+  const res = await ky.get(url, {
+    headers: {
+      "User-Agent": "imas-artwork-api Crawler (contact@arrow2nd.com)",
+    },
+    timeout: 5000,
+    throwHttpErrors: false,
+  });
 
+  if (!res.ok) {
+    console.error(`[ERR: ${res.status}] アクセスできませんでした (${url})`);
+    return;
+  }
+
+  const html = await getHtmlUtf8(res);
   const doc = new DOMParser().parseFromString(html, "text/html");
-  if (!doc) throw new Error("HTMLの解析に失敗しました");
+
+  if (!doc) {
+    throw new Error("HTMLの解析に失敗しました");
+  }
 
   return { html, doc };
 }
