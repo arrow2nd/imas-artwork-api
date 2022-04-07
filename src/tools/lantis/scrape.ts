@@ -109,7 +109,7 @@ export async function scrapeCdPage(
   cdList.add({
     id: cdId,
     title: title || "",
-    page: pageUrl,
+    website: pageUrl,
     artwork: artworkUrl || "",
   });
 }

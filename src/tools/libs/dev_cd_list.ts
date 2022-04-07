@@ -11,8 +11,8 @@ export class DevCDList extends CDList {
     console.log("-".repeat(25));
     console.log(`ID: ${cd.id}`);
     console.log(`タイトル: ${cd.title}`);
-    console.log(`ページ URL: ${cd.page}`);
-    console.log(`アートワーク URL: ${cd.artwork}`);
+    console.log(`Webサイト: ${cd.artwork}`);
+    console.log(`アートワーク: ${cd.artwork}`);
   }
 
   /**

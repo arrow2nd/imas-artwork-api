@@ -49,7 +49,7 @@ export function parseLinkElement(aElm: Element) {
   cdList.add({
     id: cdId,
     title: title || "",
-    page: pageUrl,
+    website: pageUrl,
     artwork: artworkUrl || "",
   });
 }

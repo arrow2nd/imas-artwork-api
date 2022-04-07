@@ -6,7 +6,7 @@ export type CD = {
   /** タイトル */
   title: string;
   /** ページURL */
-  page: string;
+  website: string;
   /** アートワークURL */
   artwork: string;
 };

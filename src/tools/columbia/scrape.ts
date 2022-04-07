@@ -91,7 +91,7 @@ export async function scrapeCdPage(pageUrl: string) {
   cdList.add({
     id: cdId,
     title,
-    page: pageUrl,
+    website: pageUrl,
     artwork: artworkUrl,
   });
 }
