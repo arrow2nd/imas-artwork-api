@@ -6,6 +6,11 @@ import { parseLinkElement } from "./parse.ts";
 
 const baseUrl = "https://shinycolors.lantis.jp/discography/";
 
+/**
+ * シャニマスCDのデータを更新
+ * @param ids ID配列
+ * @returns 新規追加するアートワークデータ
+ */
 export async function updateShiny(ids: string[]): Promise<Artwork[]> {
   // メインページを取得
   const res = await fetchHtml(baseUrl);
@@ -21,18 +26,18 @@ export async function updateShiny(ids: string[]): Promise<Artwork[]> {
 
   console.log(`[OK] 詳細ページのリンク要素取得完了 (${aElms.length} 件)`);
 
-  const addArtworks = [] as Artwork[];
+  const newArtworks = [] as Artwork[];
 
   // 各要素を解析
   for (const aElm of aElms) {
     const result = parseLinkElement(ids, aElm);
 
     if (result) {
-      addArtworks.push(result);
+      newArtworks.push(result);
     }
   }
 
   console.log(`[SUCCESS: shiny]`);
 
-  return addArtworks;
+  return newArtworks;
 }

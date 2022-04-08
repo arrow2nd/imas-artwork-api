@@ -6,6 +6,7 @@ import { Artwork } from "../../models/artworks.ts";
  * リンク要素をパースする
  * @param ids ID配列
  * @param aElm aタグ
+ * @returns アートワークデータ
  */
 export function parseLinkElement(
   ids: string[],
@@ -48,17 +49,15 @@ export function parseLinkElement(
     throw new Error(`アートワークが見つかりませんでした (${errOut})`);
   }
 
-  console.log("-".repeat(25));
-  console.log(`ID: ${cdId}`);
-  console.log(`タイトル: ${title}`);
-  console.log(`Webサイト: ${website}`);
-  console.log(`アートワーク: ${image}`);
-
-  // 追加して保存
-  return Artwork.create({
+  // アートワークデータを作成
+  const artwork = Artwork.create({
     _id: cdId,
     title: title || "",
     website,
     image: image || "",
   });
+
+  artwork.debugLog();
+
+  return artwork;
 }

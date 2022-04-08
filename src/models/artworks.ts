@@ -11,7 +11,7 @@ const artworksCollection = db.collection<ArtworkSchema>("artworks");
 
 export class Artwork {
   private constructor(
-    public _id: string,
+    public id: string,
     public title: string,
     public website: string,
     public image: string
@@ -33,7 +33,7 @@ export class Artwork {
    */
   static async findById(id: string) {
     const artwork = await artworksCollection.findOne({ _id: id });
-    if (!artwork) return undefined;
+    if (!artwork) return;
 
     return new this(artwork._id, artwork.title, artwork.website, artwork.image);
   }
@@ -54,7 +54,7 @@ export class Artwork {
       .find({ title: titleRegExp })
       .toArray();
 
-    if (!artworks) return undefined;
+    if (!artworks) return;
 
     return artworks.map((e) => new this(e._id, e.title, e.website, e.image));
   }
@@ -69,11 +69,21 @@ export class Artwork {
   }
 
   /**
-   * データを追加
+   * DBに反映
    */
   async commit() {
-    const { _id, title, website, image } = this;
+    const { id, title, website, image } = this;
+    await artworksCollection.insertOne({ _id: id, title, website, image });
+  }
 
-    await artworksCollection.insertOne({ _id, title, website, image });
+  /**
+   * デバッグログを出力
+   */
+  debugLog() {
+    console.log("-".repeat(25));
+    console.log(`ID: ${this.id}`);
+    console.log(`タイトル: ${this.title}`);
+    console.log(`Webサイト: ${this.website}`);
+    console.log(`アートワーク: ${this.image}`);
   }
 }

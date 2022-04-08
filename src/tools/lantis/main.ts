@@ -4,8 +4,13 @@ import { Artwork } from "../../models/artworks.ts";
 
 import { scrapeCdPage } from "./scrape.ts";
 
+/**
+ * ランティス系CDのデータを更新
+ * @param ids ID配列
+ * @returns 新規追加するアートワークデータ
+ */
 export async function updateLantis(ids: string[]) {
-  const addArtworks = [] as Artwork[];
+  const newArtworks = [] as Artwork[];
 
   for (const path of ["imas", "sidem"]) {
     const baseUrl = `https://www.lantis.jp/${path}/`;
@@ -33,12 +38,12 @@ export async function updateLantis(ids: string[]) {
       const result = await scrapeCdPage(ids, baseUrl, pagePath);
 
       if (result) {
-        addArtworks.push(result);
+        newArtworks.push(result);
       }
     }
 
     console.log(`[SUCCESS: ${path}]`);
   }
 
-  return addArtworks;
+  return newArtworks;
 }

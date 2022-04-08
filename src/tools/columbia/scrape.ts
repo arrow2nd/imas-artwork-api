@@ -8,8 +8,8 @@ import { Artwork } from "../../models/artworks.ts";
 /**
  * タイトルを取得
  * @param doc ドキュメント
- * @param cdId CDID
- * @returns CDタイトル
+ * @param cdId ID
+ * @returns タイトル
  */
 function getTitle(doc: Document, cdId: string): string {
   const fmt = (text: string) => text.replace(/[　 \n]+/g, " ").trim();
@@ -35,8 +35,8 @@ function getTitle(doc: Document, cdId: string): string {
 
 /**
  * コロムビア公式サイトからアートワークを取得
- * @param cdId CDID
- * @returns ジャケットURL
+ * @param cdId ID
+ * @returns アートワークURL
  */
 async function fetchArtwork(cdId: string): Promise<string> {
   const url = `https://columbia.jp/prod-info/jacket/${cdId}.jpg`;
@@ -46,7 +46,7 @@ async function fetchArtwork(cdId: string): Promise<string> {
 }
 
 /**
- * CD詳細ページをスクレイピング
+ * 詳細ページをスクレイピング
  * @param ids ID配列
  * @param website URL
  * @returns アートワークデータ
@@ -93,16 +93,15 @@ export async function scrapeCdPage(
     throw new Error(`アートワークが見つかりませんでした (${website})`);
   }
 
-  console.log("-".repeat(25));
-  console.log(`ID: ${cdId}`);
-  console.log(`タイトル: ${title}`);
-  console.log(`Webサイト: ${website}`);
-  console.log(`アートワーク: ${image}`);
-
-  return Artwork.create({
+  // アートワークデータを作成
+  const artwork = Artwork.create({
     _id: cdId,
     title: title || "",
     website,
     image: image || "",
   });
+
+  artwork.debugLog();
+
+  return artwork;
 }

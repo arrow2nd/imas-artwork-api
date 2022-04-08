@@ -1,5 +1,5 @@
 import { db } from "../libs/db.ts";
-import { ArtworkSchema, Artwork } from "../models/artworks.ts";
+import { ArtworkSchema } from "../models/artworks.ts";
 
 import { updateColumbia } from "./columbia/main.ts";
 import { updateLantis } from "./lantis/main.ts";
@@ -11,17 +11,15 @@ const artworkIds = (await artworksCollection.find().toArray()).map(
   ({ _id }) => _id
 );
 
-let artworks = [] as Artwork[];
-
-artworks = artworks.concat(
+const newArtworks = [
   await updateColumbia(artworkIds),
   await updateLantis(artworkIds),
-  await updateShiny(artworkIds)
-);
+  await updateShiny(artworkIds),
+].flat();
 
-if (artworks.length !== 0) {
-  console.log(artworks);
-  await artworksCollection.insertMany(artworks);
+if (newArtworks.length !== 0) {
+  console.log(newArtworks);
+  await artworksCollection.insertMany(newArtworks);
 }
 
 console.log("[OK]");

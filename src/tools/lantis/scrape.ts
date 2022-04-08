@@ -8,7 +8,7 @@ import { Artwork } from "../../models/artworks.ts";
 /**
  * タイトルを取得
  * @param doc ドキュメント
- * @returns CDタイトル
+ * @returns タイトル
  */
 function getTitle(doc: Document): string | undefined {
   const fmt = (text: string) => {
@@ -29,14 +29,14 @@ function getTitle(doc: Document): string | undefined {
     if (title) return fmt(title);
   }
 
-  return undefined;
+  return;
 }
 
 /**
  * アートワーク画像のパスを取得
  * @param pageUrl ページURL
  * @param doc ドキュメント
- * @returns ジャケットURL
+ * @returns アートワークURL
  */
 function getArtworkUrl(pageUrl: string, doc: Document): string | undefined {
   const selectors = [
@@ -52,14 +52,15 @@ function getArtworkUrl(pageUrl: string, doc: Document): string | undefined {
     if (imagePath) return new URL(imagePath, pageUrl).href;
   }
 
-  return undefined;
+  return;
 }
 
 /**
- * CD詳細ページをスクレイピングする
+ * 詳細ページをスクレイピングする
  * @param ids ID配列
  * @param baseUrl ベースURL
- * @param pagePath CDページへの相対パス
+ * @param pagePath 詳細ページへの相対パス
+ * @returns アートワークデータ
  */
 export async function scrapeCdPage(
   ids: string[],
@@ -108,16 +109,15 @@ export async function scrapeCdPage(
     throw new Error(`アートワークが見つかりませんでした (${website})`);
   }
 
-  console.log("-".repeat(25));
-  console.log(`ID: ${cdId}`);
-  console.log(`タイトル: ${title}`);
-  console.log(`Webサイト: ${website}`);
-  console.log(`アートワーク: ${image}`);
-
-  return Artwork.create({
+  // アートワークデータを作成
+  const artwork = Artwork.create({
     _id: cdId,
     title: title || "",
     website,
     image: image || "",
   });
+
+  artwork.debugLog();
+
+  return artwork;
 }

@@ -6,6 +6,11 @@ import { scrapeCdPage } from "./scrape.ts";
 
 const baseUrl = "https://columbia.jp/idolmaster/";
 
+/**
+ * コロムビア系CDのデータを更新
+ * @param ids ID配列
+ * @returns 新規追加するアートワークデータ
+ */
 export async function updateColumbia(ids: string[]): Promise<Artwork[]> {
   // メインページを取得
   const res = await fetchHtml(baseUrl + "index.html");
@@ -18,7 +23,7 @@ export async function updateColumbia(ids: string[]): Promise<Artwork[]> {
 
   console.log(`[OK] 詳細ページのリンク取得完了 (${detailPages.length} 件)`);
 
-  const addArtworks = [] as Artwork[];
+  const newArtworks = [] as Artwork[];
 
   // 各ページに対して処理
   for (const link of detailPages) {
@@ -28,11 +33,11 @@ export async function updateColumbia(ids: string[]): Promise<Artwork[]> {
     const result = await scrapeCdPage(ids, pageUrl);
 
     if (result) {
-      addArtworks.push(result);
+      newArtworks.push(result);
     }
   }
 
   console.log("[SUCCESS: columbia]");
 
-  return addArtworks;
+  return newArtworks;
 }
