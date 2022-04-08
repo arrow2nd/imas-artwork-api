@@ -42,6 +42,8 @@ async function fetchArtwork(cdId: string): Promise<string> {
   const url = `https://columbia.jp/prod-info/jacket/${cdId}.jpg`;
   const res = await ky.get(url, { timeout: 5000, throwHttpErrors: false });
 
+  await wait(5);
+
   return res.ok ? url : "";
 }
 
