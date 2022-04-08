@@ -16,7 +16,7 @@ export const artworkController = {
   },
 
   /**
-   * /artwork/:id
+   * /v1/cd/:id
    * @param context コンテキスト
    */
   async get(context: Context) {
@@ -32,11 +32,20 @@ export const artworkController = {
   },
 
   /**
-   * /list
+   * /v1/list
    * @param context コンテキスト
    */
   async search(context: Context) {
     const { keyword, order, orderby, limit } = helpers.getQuery(context);
+
+    // console.log(`keyword = '${keyword}'`);
+
+    // キーワードが無い
+    if (!keyword) {
+      context.response.status = Status.BadRequest;
+      context.response.body = { message: "Invalid parameter" };
+      return;
+    }
 
     // ソート順
     const orderNum = order === "desc" ? Order.Desc : Order.Asc;
@@ -53,11 +62,6 @@ export const artworkController = {
       limit: limit ? parseInt(limit) : undefined,
     });
 
-    // パラメータが間違っている
-    if (!artworks) {
-      context.response.status = Status.BadRequest;
-    }
-
-    context.response.body = artworks || { message: "Invalid parameter" };
+    context.response.body = artworks;
   },
 };

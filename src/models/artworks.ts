@@ -57,9 +57,6 @@ export class Artwork {
     sort,
     limit,
   }: FindByKeyword): Promise<Artwork[] | undefined> {
-    // キーワードが空、もしくは無い
-    if (typeof keyword !== "string" || keyword === "") return;
-
     // 正規表現文字列をエスケープ
     const escaped = escapeRegExp(keyword);
     const titleRegExp = new RegExp(`${escaped}`, "i");
