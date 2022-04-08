@@ -1,4 +1,5 @@
 import { fetchHtml } from "../../libs/fetch.ts";
+import { wait } from "../../libs/util.ts";
 
 import { Artwork } from "../../models/artworks.ts";
 
@@ -43,6 +44,8 @@ export async function updateLantis(ids: string[]) {
     }
 
     console.log(`[SUCCESS: ${path}]`);
+
+    await wait(5);
   }
 
   return newArtworks;

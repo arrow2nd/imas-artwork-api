@@ -1,4 +1,5 @@
 import { fetchHtml } from "../../libs/fetch.ts";
+import { wait } from "../../libs/util.ts";
 
 import { Artwork } from "../../models/artworks.ts";
 
@@ -38,6 +39,8 @@ export async function updateColumbia(ids: string[]): Promise<Artwork[]> {
   }
 
   console.log("[SUCCESS: columbia]");
+
+  await wait(5);
 
   return newArtworks;
 }
