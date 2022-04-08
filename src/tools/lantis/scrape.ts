@@ -1,4 +1,4 @@
-import { Document } from "../../deps.ts";
+import { Document } from "../../dev_deps.ts";
 
 import { fetchHtml } from "../../libs/fetch.ts";
 import { wait } from "../../libs/util.ts";

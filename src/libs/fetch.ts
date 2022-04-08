@@ -1,4 +1,4 @@
-import { DOMParser, Document, ky } from "../deps.ts";
+import { DOMParser, Document, ky } from "../dev_deps.ts";
 
 /**
  * UTF-8のHTML文字列を取得
