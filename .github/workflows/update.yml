@@ -3,8 +3,8 @@ name: update
 on:
   workflow_dispatch:
   schedule:
-    # 日本時間のお昼12時
-    - cron: "0 3 * * *"
+    # 日本時間金曜日の深夜0時
+    - cron: "0 12 * * 5"
 
 jobs:
   update:
