@@ -1,5 +1,13 @@
+import { Document } from "../deps.ts";
+
 import { db } from "../libs/db.ts";
 import { escapeRegExp } from "../libs/util.ts";
+
+type FindByKeyword = {
+  keyword: string;
+  sort?: Document;
+  limit?: number;
+};
 
 export interface ArtworkSchema {
   _id: string;
@@ -44,15 +52,20 @@ export class Artwork {
    * @param keyword キーワード
    * @returns 検索結果
    */
-  static async findByKeyword(keyword: string): Promise<Artwork[] | undefined> {
-    if (typeof keyword !== "string" || keyword === "") return undefined;
+  static async findByKeyword({
+    keyword,
+    sort,
+    limit,
+  }: FindByKeyword): Promise<Artwork[] | undefined> {
+    // キーワードが空、もしくは無い
+    if (typeof keyword !== "string" || keyword === "") return;
 
     // 正規表現文字列をエスケープ
     const escaped = escapeRegExp(keyword);
     const titleRegExp = new RegExp(`${escaped}`, "i");
 
     const artworks = await artworksCollection
-      .find({ title: titleRegExp })
+      .find({ title: titleRegExp }, { sort, limit })
       .toArray();
 
     return artworks.map((e) => new this(e._id, e.title, e.website, e.image));

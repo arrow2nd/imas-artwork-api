@@ -1,5 +1,10 @@
-import { Context, Status, helpers } from "../deps.ts";
+import { Context, Status, helpers, Document } from "../deps.ts";
 import { Artwork } from "../models/artworks.ts";
+
+enum Order {
+  Asc = 1,
+  Desc = -1,
+}
 
 export const artworkController = {
   /**
@@ -18,6 +23,7 @@ export const artworkController = {
     const { id } = helpers.getQuery(context, { mergeParams: true });
     const artwork = await Artwork.findById(id);
 
+    // IDが存在しない
     if (!artwork) {
       context.response.status = Status.NotFound;
     }
@@ -30,13 +36,28 @@ export const artworkController = {
    * @param context コンテキスト
    */
   async search(context: Context) {
-    const { keyword } = helpers.getQuery(context);
-    const artworks = await Artwork.findByKeyword(keyword);
+    const { keyword, order, orderby, limit } = helpers.getQuery(context);
 
+    // ソート順
+    const orderNum = order === "desc" ? Order.Desc : Order.Asc;
+
+    // ソート基準
+    const sorts: Map<string, Document> = new Map([
+      ["id", { _id: orderNum }],
+      ["title", { title: orderNum }],
+    ]);
+
+    const artworks = await Artwork.findByKeyword({
+      keyword,
+      sort: sorts.get(orderby),
+      limit: limit ? parseInt(limit) : undefined,
+    });
+
+    // パラメータが間違っている
     if (!artworks) {
-      context.response.status = Status.NotFound;
+      context.response.status = Status.BadRequest;
     }
 
-    context.response.body = artworks || { message: "Not Found" };
+    context.response.body = artworks || { message: "Invalid parameter" };
   },
 };
