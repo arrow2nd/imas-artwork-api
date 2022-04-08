@@ -5,3 +5,12 @@
 export function wait(sec: number): Promise<void> {
   return new Promise((e) => setTimeout(e, sec * 1000));
 }
+
+/**
+ * 正規表現文字列をエスケープ
+ * @param text 文字列
+ * @returns エスケープ後の文字列
+ */
+export function escapeRegExp(text: string): string {
+  return text.replace(/([$()*+\-.?\[\]^{|}])/g, "\\$1");
+}

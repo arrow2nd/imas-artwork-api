@@ -1,4 +1,5 @@
 import { db } from "../libs/db.ts";
+import { escapeRegExp } from "../libs/util.ts";
 
 export interface ArtworkSchema {
   _id: string;
@@ -21,7 +22,7 @@ export class Artwork {
    * 全て取得
    * @returns 検索結果
    */
-  static async findAll() {
+  static async findAll(): Promise<Artwork[]> {
     const artworks = await artworksCollection.find().toArray();
     return artworks.map((e) => new this(e._id, e.title, e.website, e.image));
   }
@@ -31,7 +32,7 @@ export class Artwork {
    * @param id ID
    * @returns 検索結果
    */
-  static async findById(id: string) {
+  static async findById(id: string): Promise<Artwork | undefined> {
     const artwork = await artworksCollection.findOne({ _id: id });
     if (!artwork) return;
 
@@ -43,18 +44,16 @@ export class Artwork {
    * @param keyword キーワード
    * @returns 検索結果
    */
-  static async findByKeyword(keyword: string) {
+  static async findByKeyword(keyword: string): Promise<Artwork[] | undefined> {
     if (typeof keyword !== "string" || keyword === "") return undefined;
 
     // 正規表現文字列をエスケープ
-    const replaced = keyword.replace(/([$()*+\-.?\[\]^{|}])/g, "\\$1");
-    const titleRegExp = new RegExp(`${replaced}`, "i");
+    const escaped = escapeRegExp(keyword);
+    const titleRegExp = new RegExp(`${escaped}`, "i");
 
     const artworks = await artworksCollection
       .find({ title: titleRegExp })
       .toArray();
-
-    if (!artworks) return;
 
     return artworks.map((e) => new this(e._id, e.title, e.website, e.image));
   }
@@ -64,7 +63,7 @@ export class Artwork {
    * @param 追加するデータ
    * @returns アートワークデータ
    */
-  static create({ _id, title, website, image }: ArtworkSchema) {
+  static create({ _id, title, website, image }: ArtworkSchema): Artwork {
     return new this(_id, title, website, image);
   }
 
