@@ -1,6 +1,6 @@
 # imas-artwork-api
 
-アイマス CD のアートワーク API
+アイマス CD の非公式アートワーク情報 API
 
 ## エンドポイント
 
