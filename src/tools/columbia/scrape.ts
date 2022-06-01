@@ -12,7 +12,7 @@ import { Artwork } from "../../models/artworks.ts";
  * @returns タイトル
  */
 function getTitle(doc: Document, cdId: string): string {
-  const fmt = (text: string) => text.replace(/[　 \n]+/g, " ").trim();
+  const fmt = (text: string) => text.replace(/[　 \n]+|Disc.\d/g, " ").trim();
 
   // NOTE: 1ページに複数のCDが掲載されている場合があるので
   // まずそれを確かめて、無い場合はサイトタイトルから抽出する
@@ -55,7 +55,7 @@ async function fetchArtwork(cdId: string): Promise<string> {
  */
 export async function scrapeCdPage(
   ids: string[],
-  website: string
+  website: string,
 ): Promise<Artwork | undefined> {
   // URLからCDのIDを抽出
   const idMatched = website.match(/(?<A>(?:CO|XT)\S+)?\.html#?(?<B>CO\S+$)?/);
@@ -83,7 +83,7 @@ export async function scrapeCdPage(
 
   // アートワークのURLを抽出
   const imagePath = res.html.match(
-    new RegExp(`\(\(\?\:images\?\|img\)\/${cdId}.\(\?\:jpg\|png\)\)`)
+    new RegExp(`\(\(\?\:images\?\|img\)\/${cdId}.\(\?\:jpg\|png\)\)`),
   )?.[1];
 
   // 見つからない場合、コロムビア公式通販を参照する

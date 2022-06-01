@@ -56,6 +56,15 @@ function getArtworkUrl(pageUrl: string, doc: Document): string | undefined {
 }
 
 /**
+ * CDIDを抽出
+ * @param text 文字列
+ * @returns CDID
+ */
+function getCdId(text: string): string | undefined {
+  return text.match(/(L[A-Z]{2,3}-\d{4,5})/)?.[1];
+}
+
+/**
  * 詳細ページをスクレイピングする
  * @param ids ID配列
  * @param baseUrl ベースURL
@@ -65,20 +74,17 @@ function getArtworkUrl(pageUrl: string, doc: Document): string | undefined {
 export async function scrapeCdPage(
   ids: string[],
   baseUrl: string,
-  pagePath: string
+  pagePath: string,
 ): Promise<Artwork | undefined> {
+  const isDuplicate = (cdId: string) => ids.find((id) => id === cdId);
+
   const website = new URL(pagePath, baseUrl).href;
 
   // URLからIDを抽出
-  const cdId = website.match(/release_(L[A-Z]{2,3}\S+)\.html$/)?.[1];
-
-  if (!cdId) {
-    console.log(`[SKIP] IDが抽出できませんでした (${website})`);
-    return;
-  }
+  let cdId = getCdId(website);
 
   // 重複を確認
-  if (ids.find((id) => id === cdId)) {
+  if (cdId && isDuplicate(cdId)) {
     console.log(`[SKIP] 既に登録されています (${website})`);
     return;
   }
@@ -107,6 +113,16 @@ export async function scrapeCdPage(
     return;
   } else if (!image) {
     throw new Error(`アートワークが見つかりませんでした (${website})`);
+  }
+
+  // CDIDが未抽出の場合、アートワークURLからの抽出を試みる
+  if (!cdId) {
+    cdId = getCdId(image);
+  }
+
+  if (!cdId || isDuplicate(cdId)) {
+    console.log(`[SKIP] 既に登録されている、もしくはIDが取得できませんでした (${image} / ${website})`);
+    return;
   }
 
   // アートワークデータを作成
