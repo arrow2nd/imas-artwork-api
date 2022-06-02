@@ -18,8 +18,37 @@ jobs:
         with:
           deno-version: v1.x
 
-      - name: Update Artwork data
-        run: deno task update
+      - name: Fetch New Artwork Data
+        run: |
+          deno tasks update
+          echo "OUTPUT=`cat ./data.json`" >> $GITHUB_ENV
+        env:
+          MONGO_DB_URL: ${{ secrets.MONGO_DB_URL }}
+          MONGO_DB_NAME: ${{ secrets.MONGO_DB_NAME }}
+
+      - name: Send to Slack
+        if: hashFiles('data.json') != ''
+        uses: slackapi/slack-github-action@v1.16.0
+        channel-id: 'C03JQ4MPLMN'
+        payload: |
+            {
+              "text": "DBを更新しました",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "DBを更新しました\n```\n${{ env.OUTPUT }}\n```"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_BOT_TOKEN }}
+
+      - name: Upload to DB
+        if: hashFiles("data.json") != ''
+        run: deno tasks upload
         env:
           MONGO_DB_URL: ${{ secrets.MONGO_DB_URL }}
           MONGO_DB_NAME: ${{ secrets.MONGO_DB_NAME }}

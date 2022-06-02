@@ -24,7 +24,10 @@ const newArtworks = [
 
 if (newArtworks.length !== 0) {
   console.log(newArtworks);
-  await artworksCollection.insertMany(newArtworks);
+  Deno.writeTextFileSync(
+    "./data.json",
+    JSON.stringify(newArtworks, null, "  "),
+  );
 }
 
 console.log("[OK]");
