@@ -29,22 +29,23 @@ jobs:
       - name: Send to Slack
         if: hashFiles('data.json') != ''
         uses: slackapi/slack-github-action@v1.16.0
-        channel-id: 'C03JQ4MPLMN'
-        payload: |
-            {
-              "text": "DBを更新しました",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "DBを更新しました\n```\n${{ env.OUTPUT }}\n```"
+        with:
+          channel-id: 'C03JQ4MPLMN'
+          payload: |
+              {
+                "text": "DBを更新しました",
+                "blocks": [
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "DBを更新しました\n```\n${{ env.OUTPUT }}\n```"
+                    }
                   }
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_BOT_TOKEN }}
+                ]
+              }
+          env:
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_BOT_TOKEN }}
 
       - name: Upload to DB
         if: hashFiles("data.json") != ''
