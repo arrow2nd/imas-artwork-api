@@ -3,8 +3,8 @@ name: update
 on:
   workflow_dispatch:
   schedule:
-    # 日本時間 火曜日の深夜0時（水曜日）
-    - cron: "0 15 * * 2"
+    # 日本時間 毎月1日
+    - cron: "* 0 1 * *"
 
 jobs:
   update:
@@ -19,9 +19,7 @@ jobs:
           deno-version: v1.x
 
       - name: Fetch New Artwork Data
-        run: |
-          deno task update
-          echo "OUTPUT=`cat ./data.json`" >> $GITHUB_ENV
+        run: deno task update
         env:
           MONGO_DB_URL: ${{ secrets.MONGO_DB_URL }}
           MONGO_DB_NAME: ${{ secrets.MONGO_DB_NAME }}
@@ -39,7 +37,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "DBを更新しました\n```\n${{ env.OUTPUT }}\n```"
+                    "text": "DBを更新しました\n```\n$(cat ./data.json)\n```"
                   }
                 }
               ]
