@@ -44,8 +44,8 @@ jobs:
                   }
                 ]
               }
-          env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_BOT_TOKEN }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_BOT_TOKEN }}
 
       - name: Upload to DB
         if: hashFiles("data.json") != ''
