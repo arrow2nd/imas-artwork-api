@@ -48,7 +48,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_BOT_TOKEN }}
 
       - name: Upload to DB
-        if: hashFiles("data.json") != ''
+        if: hashFiles('data.json') != ''
         run: deno tasks upload
         env:
           MONGO_DB_URL: ${{ secrets.MONGO_DB_URL }}
