@@ -67,10 +67,7 @@ export async function scrapeCdPage(
   }
 
   // 重複を確認
-  if (ids.find((id) => id === cdId)) {
-    console.log(`[SKIP] 既に登録されています (${website})`);
-    return;
-  }
+  if (ids.find((id) => id === cdId)) return;
 
   // 詳細ページを取得
   const res = await fetchHtml(website);

@@ -10,7 +10,7 @@ import { Artwork } from "../../models/artworks.ts";
  */
 export function parseLinkElement(
   ids: string[],
-  aElm: Element
+  aElm: Element,
 ): Artwork | undefined {
   const errOut = aElm.innerHTML;
 
@@ -28,10 +28,7 @@ export function parseLinkElement(
   }
 
   // 重複を確認
-  if (ids.find((id) => id === cdId)) {
-    console.log(`[SKIP] 既に登録されています (${website})`);
-    return;
-  }
+  if (ids.find((id) => id === cdId)) return;
 
   // タイトルを抽出
   const title = aElm.getAttribute("title");

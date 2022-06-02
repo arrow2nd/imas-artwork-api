@@ -84,10 +84,7 @@ export async function scrapeCdPage(
   let cdId = getCdId(website);
 
   // 重複を確認
-  if (cdId && isDuplicate(cdId)) {
-    console.log(`[SKIP] 既に登録されています (${website})`);
-    return;
-  }
+  if (cdId && isDuplicate(cdId)) return;
 
   // 詳細ページを取得
   const res = await fetchHtml(website);
