@@ -32,18 +32,18 @@ jobs:
         with:
           channel-id: 'C03JQ4MPLMN'
           payload: |
-              {
-                "text": "DBを更新しました",
-                "blocks": [
-                  {
-                    "type": "section",
-                    "text": {
-                      "type": "mrkdwn",
-                      "text": "DBを更新しました\n```\n${{ env.OUTPUT }}\n```"
-                    }
+            {
+              "text": "DBを更新しました",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "DBを更新しました\n```\n${{ env.OUTPUT }}\n```"
                   }
-                ]
-              }
+                }
+              ]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_BOT_TOKEN }}
 
