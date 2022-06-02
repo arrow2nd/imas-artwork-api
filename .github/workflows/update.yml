@@ -19,7 +19,12 @@ jobs:
           deno-version: v1.x
 
       - name: Fetch New Artwork Data
-        run: deno task update
+        id: update
+        run: |
+          deno task update
+          data=$(cat ./data.json)
+          data="${data//$'\n'/\\n}"
+          echo "::set-output name=data::$data"
         env:
           MONGO_DB_URL: ${{ secrets.MONGO_DB_URL }}
           MONGO_DB_NAME: ${{ secrets.MONGO_DB_NAME }}
@@ -37,13 +42,13 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "DBを更新しました\n```\n$(cat ./data.json)\n```"
+                    "text": "DBを更新しました\n```\n${{ steps.update.outputs.data }}\n```"
                   }
                 }
               ]
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
       - name: Upload to DB
         if: hashFiles('data.json') != ''
