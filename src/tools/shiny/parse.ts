@@ -31,7 +31,7 @@ export function parseLinkElement(
   if (ids.find((id) => id === cdId)) return;
 
   // タイトルを抽出
-  const title = aElm.getAttribute("title");
+  const title: string | undefined = aElm.getAttribute("title");
   if (!title) {
     throw new Error(`タイトルが抽出できませんでした (${errOut})`);
   }
@@ -49,9 +49,9 @@ export function parseLinkElement(
   // アートワークデータを作成
   const artwork = Artwork.create({
     _id: cdId,
-    title: title || "",
+    title,
     website,
-    image: image || "",
+    image,
   });
 
   artwork.debugLog();

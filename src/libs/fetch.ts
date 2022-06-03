@@ -1,4 +1,4 @@
-import { DOMParser, Document, ky } from "../dev_deps.ts";
+import { Document, DOMParser, ky } from "../dev_deps.ts";
 
 /**
  * UTF-8のHTML文字列を取得
@@ -23,10 +23,10 @@ type FetchHtmlResult = {
 /**
  * URLからHTML・Documentを取得
  * @param url URL
- * @returns Document
+ * @returns HTML, Document
  */
 export async function fetchHtml(
-  url: string
+  url: string,
 ): Promise<FetchHtmlResult | undefined> {
   const res = await ky.get(url, {
     headers: {

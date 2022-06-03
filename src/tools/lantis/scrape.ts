@@ -11,10 +11,11 @@ import { Artwork } from "../../models/artworks.ts";
  * @returns タイトル
  */
 function getTitle(doc: Document): string | undefined {
+  // 括弧で囲まれた文字列・ゲーム名・空白・改行を削除
   const fmt = (text: string) => {
     return text
       .replace(/(^\S*『.+?』\S*\n|タイトル[:：]|)/g, "")
-      .replace(/[　 \n\u00a0]+/g, " ")
+      .replace(/[　 \n\u00a0]+/g, " ") // \u00a0 = ノーブレークスペース
       .trim();
   };
 
@@ -61,7 +62,7 @@ function getArtworkUrl(pageUrl: string, doc: Document): string | undefined {
  * @returns CDID
  */
 function getCdId(text: string): string | undefined {
-  return text.match(/(L[A-Z]{2,3}-\d{4,5})/)?.[1];
+  return text.match(/(L[A-Z]{2,3}-\d{4,5})/)?.[1].toUpperCase();
 }
 
 /**
@@ -125,9 +126,9 @@ export async function scrapeCdPage(
   // アートワークデータを作成
   const artwork = Artwork.create({
     _id: cdId,
-    title: title || "",
+    title,
     website,
-    image: image || "",
+    image,
   });
 
   artwork.debugLog();
