@@ -12,6 +12,7 @@ import { Artwork } from "../../models/artworks.ts";
  * @returns タイトル
  */
 function getTitle(doc: Document, cdId: string): string {
+  // 空白・改行・Disc番号を削除
   const fmt = (text: string) => text.replace(/[　 \n]+|Disc.\d/g, " ").trim();
 
   // NOTE: 1ページに複数のCDが掲載されている場合があるので
@@ -59,7 +60,7 @@ export async function scrapeCdPage(
 ): Promise<Artwork | undefined> {
   // URLからCDのIDを抽出
   const idMatched = website.match(/(?<A>(?:CO|XT)\S+)?\.html#?(?<B>CO\S+$)?/);
-  const cdId = idMatched?.groups?.B || idMatched?.groups?.A;
+  const cdId = (idMatched?.groups?.B || idMatched?.groups?.A)?.toUpperCase();
 
   if (!cdId) {
     console.log(`[SKIP] IDが抽出できませんでした (${website})`);
