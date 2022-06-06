@@ -68,8 +68,6 @@ curl "https://imas-artwork-api.deno.dev/v1/cd/LACA-15905"
 | website | string | CD の詳細ページ URL  |
 | image   | string | アートワーク画像 URL |
 
-- 見つからなかった場合は空の配列が返ります。
-
 #### 例
 
 リクエスト
