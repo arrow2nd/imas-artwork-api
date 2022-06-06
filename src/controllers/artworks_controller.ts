@@ -1,10 +1,14 @@
-import { Context, Status, helpers, Document } from "../deps.ts";
+import { Context, Document, helpers, Status } from "../deps.ts";
 import { Artwork } from "../models/artworks.ts";
 
 enum Order {
   Asc = 1,
   Desc = -1,
 }
+
+const headers = new Headers({
+  "Access-Control-Allow-Origin": "*",
+});
 
 export const artworkController = {
   /**
@@ -28,6 +32,7 @@ export const artworkController = {
       context.response.status = Status.NotFound;
     }
 
+    context.response.headers = headers;
     context.response.body = artwork || { message: "Not Found" };
   },
 
@@ -37,8 +42,6 @@ export const artworkController = {
    */
   async search(context: Context) {
     const { keyword, order, orderby, limit } = helpers.getQuery(context);
-
-    // console.log(`keyword = '${keyword}'`);
 
     // キーワードが無い
     if (!keyword) {
@@ -62,6 +65,7 @@ export const artworkController = {
       limit: limit ? parseInt(limit) : undefined,
     });
 
+    context.response.headers = headers;
     context.response.body = artworks;
   },
 };
