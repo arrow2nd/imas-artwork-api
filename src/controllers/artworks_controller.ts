@@ -67,9 +67,11 @@ export const artworkController = {
 
     if (!artworks || artworks.length === 0) {
       context.response.status = Status.NotFound;
+      context.response.body = { message: "Not Found" };
+    } else {
+      context.response.body = artworks;
     }
 
     context.response.headers = headers;
-    context.response.body = artworks || { message: "Not Found" };
   },
 };
