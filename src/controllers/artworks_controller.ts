@@ -65,7 +65,11 @@ export const artworkController = {
       limit: limit ? parseInt(limit) : undefined,
     });
 
+    if (!artworks || artworks.length === 0) {
+      context.response.status = Status.NotFound;
+    }
+
     context.response.headers = headers;
-    context.response.body = artworks;
+    context.response.body = artworks || { message: "Not Found" };
   },
 };
