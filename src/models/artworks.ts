@@ -23,7 +23,7 @@ export class Artwork {
     public id: string,
     public title: string,
     public website: string,
-    public image: string
+    public image: string,
   ) {}
 
   /**
