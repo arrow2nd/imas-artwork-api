@@ -2,6 +2,8 @@
 
 アイマス CD の非公式アートワーク情報 API
 
+![deno deploy](https://img.shields.io/badge/deno-deploy-green?logo=deno)
+
 ## エンドポイント
 
 `https://imas-artwork-api.deno.dev/v1/`
