@@ -25,7 +25,7 @@ export const artworkController = {
    */
   async get(context: Context) {
     const { id } = helpers.getQuery(context, { mergeParams: true });
-    const artwork = await Artwork.findById(id);
+    const artwork = await Artwork.findById(id.trim().toUpperCase());
 
     // IDが存在しない
     if (!artwork) {
@@ -60,7 +60,7 @@ export const artworkController = {
     ]);
 
     const artworks = await Artwork.findByKeyword({
-      keyword,
+      keyword: keyword.trim(),
       sort: sorts.get(orderby),
       limit: limit ? parseInt(limit) : undefined,
     });
