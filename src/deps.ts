@@ -10,6 +10,6 @@ export {
 import {
   MongoClient,
   Document,
-} from "https://deno.land/x/mongo@v0.30.0/mod.ts";
+} from "https://deno.land/x/mongo@v0.30.1/mod.ts";
 export { MongoClient };
 export type { Document };
