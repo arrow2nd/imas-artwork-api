@@ -3,8 +3,8 @@ name: update
 on:
   workflow_dispatch:
   schedule:
-    # 日本時間 毎月1日
-    - cron: "* 0 1 * *"
+    # 日本時間 毎月1日 午前9時
+    - cron: "0 0 1 * *"
 
 jobs:
   update:
@@ -19,16 +19,19 @@ jobs:
           deno-version: v1.x
 
       - name: Fetch New Artwork Data
-        id: update
-        run: |
-          deno task update
-          data=$(cat ./data.json)
-          data=${data//$'\n'/\\n}
-          data=${data//'"'/'\"'}
-          echo "::set-output name=data::$data"
+        run: deno task update
         env:
           MONGO_DB_URL: ${{ secrets.MONGO_DB_URL }}
           MONGO_DB_NAME: ${{ secrets.MONGO_DB_NAME }}
+      
+      - name: Process data to send to Slack
+        if: hashFiles('data.json') != ''
+        id: process
+        run: |
+          data=$(cat ./data.json)
+          data=${data//$'\n'/\\n}
+          data=${data//'"'/'\"'}
+          echo "::set-output name=data::$data"        
 
       - name: Send to Slack
         if: hashFiles('data.json') != ''
@@ -43,7 +46,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "DBを更新しました\n```\n${{ steps.update.outputs.data }}\n```"
+                    "text": "DBを更新しました\n```\n${{ steps.process.outputs.data }}\n```"
                   }
                 }
               ]
