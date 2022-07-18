@@ -27,13 +27,14 @@ export const artworkController = {
     const id = ctx.req.param("id");
     const artwork = await Artwork.findById(id.trim().toUpperCase());
 
+    setHeader(ctx);
+
     // IDが存在しない
     if (!artwork) {
       ctx.status(Status.NotFound);
       return ctx.json({ message: "Not Found" });
     }
 
-    setHeader(ctx);
     return ctx.json(artwork);
   },
 
