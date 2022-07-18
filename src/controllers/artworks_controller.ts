@@ -1,4 +1,5 @@
 import { Context, Document, Status } from "../deps.ts";
+import { createError } from "../libs/util.ts";
 import { Artwork } from "../models/artworks.ts";
 
 enum Order {
@@ -32,7 +33,7 @@ export const artworkController = {
     // IDが存在しない
     if (!artwork) {
       ctx.status(Status.NotFound);
-      return ctx.json({ message: "Not Found" });
+      return ctx.json(createError(`Not Found: ${id}`));
     }
 
     return ctx.json(artwork);
@@ -48,7 +49,7 @@ export const artworkController = {
     // キーワードが無い
     if (!keyword) {
       ctx.status(Status.BadRequest);
-      return ctx.json({ message: "Invalid parameter" });
+      return ctx.json(createError("Invalid parameter: No keyword parameter"));
     }
 
     // ソート順
@@ -70,7 +71,7 @@ export const artworkController = {
 
     if (!artworks || artworks.length === 0) {
       ctx.status(Status.NotFound);
-      return ctx.json({ message: "Not Found" });
+      return ctx.json(createError(`Not Found: ${keyword}`));
     }
 
     return ctx.json(artworks);

@@ -14,3 +14,15 @@ export function wait(sec: number): Promise<void> {
 export function escapeRegExp(text: string): string {
   return text.replace(/([$()*+\-.?\[\]^{|}])/g, "\\$1");
 }
+
+type ErrorMessage = {
+  message: string;
+};
+
+/**
+ * エラーメッセージオブジェクトを生成
+ * @param msg メッセージ
+ */
+export function createError(msg: string): ErrorMessage {
+  return { message: msg };
+}
