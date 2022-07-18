@@ -1,20 +1,13 @@
-import { Application } from "./deps.ts";
+import { Hono, serve } from "./deps.ts";
 import { router } from "./libs/router.ts";
 
-const app = new Application();
+const app = new Hono();
 
-app.addEventListener("listen", ({ hostname, port, secure }) => {
-  const host = hostname === "0.0.0.0" ? "localhost" : hostname;
-  const url = `${secure ? "https" : "http"}://${host}:${port}`;
-
-  console.log(`Listening on ${url}`);
+app.onError((err, ctx) => {
+  console.error(err.message);
+  return ctx.text(`Internal Server Error: ${err.message}`, 500);
 });
 
-app.addEventListener("error", (ev) => {
-  console.error(ev.error);
-});
+app.route("/", router);
 
-app.use(router.routes());
-app.use(router.allowedMethods());
-
-await app.listen({ port: 8000 });
+serve(app.fetch);
