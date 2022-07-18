@@ -1,4 +1,4 @@
-import { Context, Document, helpers, Status } from "../deps.ts";
+import { Context, Document, Status } from "../deps.ts";
 import { Artwork } from "../models/artworks.ts";
 
 enum Order {
@@ -6,48 +6,48 @@ enum Order {
   Desc = -1,
 }
 
-const headers = new Headers({
-  "Access-Control-Allow-Origin": "*",
-});
+function setHeader(ctx: Context) {
+  ctx.header("Access-Control-Allow-Origin", "*");
+}
 
 export const artworkController = {
   /**
    * GitHubへリダイレクト
-   * @param context コンテキスト
+   * @param ctx コンテキスト
    */
-  redirect(context: Context) {
-    context.response.redirect("https://github.com/arrow2nd/imas-artwork-api");
+  redirect(ctx: Context) {
+    return ctx.redirect("https://github.com/arrow2nd/imas-artwork-api");
   },
 
   /**
    * /v1/cd/:id
-   * @param context コンテキスト
+   * @param ctx コンテキスト
    */
-  async get(context: Context) {
-    const { id } = helpers.getQuery(context, { mergeParams: true });
+  async get(ctx: Context) {
+    const id = ctx.req.param("id");
     const artwork = await Artwork.findById(id.trim().toUpperCase());
 
     // IDが存在しない
     if (!artwork) {
-      context.response.status = Status.NotFound;
+      ctx.status(Status.NotFound);
+      return ctx.json({ message: "Not Found" });
     }
 
-    context.response.headers = headers;
-    context.response.body = artwork || { message: "Not Found" };
+    setHeader(ctx);
+    return ctx.json(artwork);
   },
 
   /**
    * /v1/list
-   * @param context コンテキスト
+   * @param ctx コンテキスト
    */
-  async search(context: Context) {
-    const { keyword, order, orderby, limit } = helpers.getQuery(context);
+  async search(ctx: Context) {
+    const { keyword, order, orderby, limit } = ctx.req.query();
 
     // キーワードが無い
     if (!keyword) {
-      context.response.status = Status.BadRequest;
-      context.response.body = { message: "Invalid parameter" };
-      return;
+      ctx.status(Status.BadRequest);
+      return ctx.json({ message: "Invalid parameter" });
     }
 
     // ソート順
@@ -65,13 +65,13 @@ export const artworkController = {
       limit: limit ? parseInt(limit) : undefined,
     });
 
+    setHeader(ctx);
+
     if (!artworks || artworks.length === 0) {
-      context.response.status = Status.NotFound;
-      context.response.body = { message: "Not Found" };
-    } else {
-      context.response.body = artworks;
+      ctx.status(Status.NotFound);
+      return ctx.json({ message: "Not Found" });
     }
 
-    context.response.headers = headers;
+    return ctx.json(artworks);
   },
 };
