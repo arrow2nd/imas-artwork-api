@@ -7,6 +7,6 @@ export type { Context };
 import {
   Document,
   MongoClient,
-} from "https://deno.land/x/mongo@v0.30.1/mod.ts";
+} from "https://deno.land/x/mongo@v0.31.0/mod.ts";
 export { MongoClient };
 export type { Document };
