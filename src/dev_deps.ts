@@ -5,4 +5,4 @@ export {
   DOMParser,
   Document,
   Element,
-} from "https://deno.land/x/deno_dom@v0.1.33-alpha/deno-dom-wasm.ts";
+} from "https://deno.land/x/deno_dom@v0.1.34-alpha/deno-dom-wasm.ts";
