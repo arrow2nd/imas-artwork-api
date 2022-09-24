@@ -1,4 +1,4 @@
-export { serve, Status } from "https://deno.land/std@0.156.0/http/mod.ts";
+export { serve, Status } from "https://deno.land/std@0.157.0/http/mod.ts";
 
 import { Context, Hono } from "https://deno.land/x/hono@v2.2.1/mod.ts";
 export { Hono };
