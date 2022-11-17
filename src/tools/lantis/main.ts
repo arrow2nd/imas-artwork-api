@@ -1,4 +1,3 @@
-import { Document } from "../../dev_deps.ts";
 import { fetchHtml } from "../../libs/fetch.ts";
 import { wait } from "../../libs/util.ts";
 
@@ -26,10 +25,8 @@ export async function updateLantis(ids: string[]) {
     // 詳細ページへのリンクを取得
     const detailPages = res.doc
       .getElementsByClassName("dsc_box")
-      .map((e: Document) =>
-        e.getElementsByTagName("a").map((e: Document) =>
-          e.getAttribute("href") || ""
-        )
+      .map((e) =>
+        e.getElementsByTagName("a").map((e) => e.getAttribute("href") || "")
       )
       .flat();
 
