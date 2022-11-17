@@ -1,4 +1,3 @@
-import { Document } from "../../dev_deps.ts";
 import { fetchHtml } from "../../libs/fetch.ts";
 
 import { Artwork } from "../../models/artworks.ts";
@@ -22,7 +21,7 @@ export async function updateShiny(ids: string[]): Promise<Artwork[]> {
   // 詳細ページへのリンク要素を抽出
   const aElms = res.doc
     .getElementsByClassName("list")
-    .map((e: Document) => e.getElementsByTagName("a"))
+    .map((e) => e.getElementsByTagName("a"))
     .flat();
 
   console.log(`[OK] 詳細ページのリンク要素取得完了 (${aElms.length} 件)`);
