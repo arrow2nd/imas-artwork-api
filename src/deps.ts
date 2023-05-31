@@ -1,6 +1,6 @@
-export { serve, Status } from "https://deno.land/std@0.186.0/http/mod.ts";
+export { serve, Status } from "https://deno.land/std@0.190.0/http/mod.ts";
 
-export { type Context, Hono } from "https://deno.land/x/hono@v3.1.8/mod.ts";
+export { type Context, Hono } from "https://deno.land/x/hono@v3.2.3/mod.ts";
 
 export {
   type Document,
