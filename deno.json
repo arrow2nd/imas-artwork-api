@@ -4,5 +4,6 @@
     "dev": "deno run --allow-net --allow-read --allow-env --watch ./src/server.ts",
     "update": "deno run --allow-net --allow-read --allow-write --allow-env ./src/tools/update.ts",
     "upload": "deno run --allow-net --allow-read --allow-env ./src/tools/upload.ts"
-  }
+  },
+  "lock": false
 }
