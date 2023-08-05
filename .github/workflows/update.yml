@@ -28,10 +28,8 @@ jobs:
         if: hashFiles('data.json') != ''
         id: process
         run: |
-          data=$(cat ./data.json)
-          data=${data//$'\n'/\\n}
-          data=${data//'"'/'\"'}
-          echo "::set-output name=data::$data"        
+          titles=$(cat data.json | jq -r '.[].title' | sed 's/^/- /')
+          echo "::set-output name=titles::$titles"
 
       - name: Send to Slack
         if: hashFiles('data.json') != ''
@@ -46,7 +44,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "DBを更新しました\n```\n${{ steps.process.outputs.data }}\n```"
+                    "text": "DBを更新しました\n```\n${{ steps.process.outputs.titles }}\n```"
                   }
                 }
               ]
