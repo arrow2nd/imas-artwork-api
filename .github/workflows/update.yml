@@ -29,6 +29,7 @@ jobs:
         id: process
         run: |
           titles=$(cat data.json | jq -r '.[].title' | sed 's/^/- /')
+          titles=${titles//$'\n'/\\n}
           echo "::set-output name=titles::$titles"
 
       - name: Send to Slack
