@@ -1,4 +1,4 @@
-export { default as ky } from "npm:ky@1.0.0";
+export { default as ky } from "npm:ky@1.0.1";
 
 export {
   Document,
