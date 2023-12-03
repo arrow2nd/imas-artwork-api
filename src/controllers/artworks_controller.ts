@@ -1,4 +1,4 @@
-import { Context, Document, Status } from "../deps.ts";
+import { Context, Document } from "../deps.ts";
 import { createError } from "../libs/util.ts";
 import { Artwork } from "../models/artworks.ts";
 
@@ -32,7 +32,7 @@ export const artworkController = {
 
     // IDが存在しない
     if (!artwork) {
-      ctx.status(Status.NotFound);
+      ctx.status(404);
       return ctx.json(createError(`Not Found: ${id}`));
     }
 
@@ -48,7 +48,7 @@ export const artworkController = {
 
     // キーワードが無い
     if (!keyword) {
-      ctx.status(Status.BadRequest);
+      ctx.status(400);
       return ctx.json(createError("Invalid parameter: No keyword parameter"));
     }
 
@@ -70,7 +70,7 @@ export const artworkController = {
     setHeader(ctx);
 
     if (!artworks || artworks.length === 0) {
-      ctx.status(Status.NotFound);
+      ctx.status(404);
       return ctx.json(createError(`Not Found: ${keyword}`));
     }
 
