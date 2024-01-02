@@ -1,4 +1,4 @@
-export { type Context, Hono } from "https://deno.land/x/hono@v3.11.11/mod.ts";
+export { type Context, Hono } from "https://deno.land/x/hono@v3.11.12/mod.ts";
 
 export {
   type Document,
