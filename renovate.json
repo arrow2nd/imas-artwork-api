@@ -3,5 +3,7 @@
   "extends": [
     "config:recommended",
     "github>Omochice/renovate-config:deno"
-  ]
+  ],
+  "commitMessagePrefix": ":arrow_up: ",
+  "unicodeEmoji": true
 }
