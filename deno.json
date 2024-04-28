@@ -5,5 +5,12 @@
     "update": "deno run --allow-net --allow-read --allow-write --allow-env ./src/tools/update.ts",
     "upload": "deno run --allow-net --allow-read --allow-env ./src/tools/upload.ts"
   },
+  "imports": {
+    "hono": "https://deno.land/x/hono@v4.2.8/mod.ts",
+    "mongo": "https://deno.land/x/mongo@v0.32.0/mod.ts",
+    "ky": "npm:ky@1.2.4",
+    "deno-dom-wasm": "https://deno.land/x/deno_dom@v0.1.45/deno-dom-wasm.ts",
+    "dotenv/": "https://deno.land/x/dotenv@v3.2.2/"
+  },
   "lock": false
 }

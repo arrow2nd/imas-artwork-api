@@ -1,4 +1,4 @@
-import type { Element } from "../../dev_deps.ts";
+import type { Element } from "deno-dom-wasm";
 
 import { Artwork } from "../../models/artworks.ts";
 

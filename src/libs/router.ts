@@ -1,4 +1,4 @@
-import { Hono } from "../deps.ts";
+import { Hono } from "hono";
 import { artworkController } from "../controllers/artworks_controller.ts";
 
 const v1 = new Hono();

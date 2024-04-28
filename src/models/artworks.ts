@@ -1,4 +1,4 @@
-import { Document } from "../deps.ts";
+import { Document } from "deno-dom-wasm";
 
 import { db } from "../libs/db.ts";
 import { escapeRegExp } from "../libs/util.ts";

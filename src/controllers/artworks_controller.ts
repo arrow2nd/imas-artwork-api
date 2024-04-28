@@ -1,4 +1,5 @@
-import { Context, Document } from "../deps.ts";
+import { Context } from "hono";
+import { Document } from "deno-dom-wasm";
 import { createError } from "../libs/util.ts";
 import { Artwork } from "../models/artworks.ts";
 

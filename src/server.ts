@@ -1,4 +1,4 @@
-import { Hono } from "./deps.ts";
+import { Hono } from "hono";
 import { router } from "./libs/router.ts";
 import { createError } from "./libs/util.ts";
 

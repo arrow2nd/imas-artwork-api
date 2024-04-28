@@ -1,5 +1,5 @@
-import "https://deno.land/x/dotenv@v3.2.2/load.ts";
-import { MongoClient } from "../deps.ts";
+import "dotenv/load.ts";
+import { MongoClient } from "mongo";
 
 const client = new MongoClient();
 await client.connect(Deno.env.get("MONGO_DB_URL")!);

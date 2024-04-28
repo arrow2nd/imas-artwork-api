@@ -1,4 +1,4 @@
-import { Document } from "../../dev_deps.ts";
+import { Document } from "deno-dom-wasm";
 
 import { fetchHtml } from "../../libs/fetch.ts";
 import { wait } from "../../libs/util.ts";
@@ -119,7 +119,9 @@ export async function scrapeCdPage(
   }
 
   if (!cdId || isDuplicate(cdId)) {
-    console.log(`[SKIP] 既に登録されている、もしくはIDが取得できませんでした (${image} / ${website})`);
+    console.log(
+      `[SKIP] 既に登録されている、もしくはIDが取得できませんでした (${image} / ${website})`,
+    );
     return;
   }
 
