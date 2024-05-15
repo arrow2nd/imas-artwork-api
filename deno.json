@@ -6,7 +6,7 @@
     "upload": "deno run --allow-net --allow-read --allow-env ./src/tools/upload.ts"
   },
   "imports": {
-    "hono": "https://deno.land/x/hono@v4.3.6/mod.ts",
+    "hono": "https://deno.land/x/hono@v4.3.7/mod.ts",
     "mongo": "https://deno.land/x/mongo@v0.32.0/mod.ts",
     "ky": "npm:ky@1.2.4",
     "deno-dom-wasm": "https://deno.land/x/deno_dom@v0.1.45/deno-dom-wasm.ts",
