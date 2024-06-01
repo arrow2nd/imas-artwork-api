@@ -1,5 +1,5 @@
 import { Document } from "deno-dom-wasm";
-import { ky } from "ky";
+import ky from "ky";
 
 import { fetchHtml } from "../../libs/fetch.ts";
 import { wait } from "../../libs/util.ts";

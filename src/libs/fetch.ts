@@ -1,5 +1,5 @@
 import { Document, DOMParser } from "deno-dom-wasm";
-import { ky } from "ky";
+import ky from "ky";
 
 /**
  * UTF-8のHTML文字列を取得
