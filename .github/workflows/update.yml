@@ -30,28 +30,22 @@ jobs:
         run: |
           titles=$(cat data.json | jq -r '.[].title' | sed 's/^/- /')
           titles=${titles//$'\n'/\\n}
-          echo "::set-output name=titles::$titles"
+          echo "titles=$titles" >> $GITHUB_OUTPUT
 
       - name: Send to Slack
         if: hashFiles('data.json') != ''
         uses: slackapi/slack-github-action@v2.0.0
         with:
-          channel-id: 'C03JQ4MPLMN'
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
-            {
-              "text": "DBを更新しました",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "DBを更新しました\n```\n${{ steps.process.outputs.titles }}\n```"
-                  }
-                }
-              ]
-            }
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+            channel: "C03JQ4MPLMN"
+            text: "DBを更新しました"
+            blocks:
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "DBを更新しました\n```\n${{ steps.process.outputs.titles }}\n```"``
 
       - name: Upload to DB
         if: hashFiles('data.json') != ''
