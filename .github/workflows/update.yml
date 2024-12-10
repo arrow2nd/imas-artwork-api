@@ -45,7 +45,7 @@ jobs:
               - type: section
                 text:
                   type: mrkdwn
-                  text: "DBを更新しました\n```\n${{ steps.process.outputs.titles }}\n```"``
+                  text: "DBを更新しました\n```\n${{ steps.process.outputs.titles }}\n```"
 
       - name: Upload to DB
         if: hashFiles('data.json') != ''
