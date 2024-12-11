@@ -8,7 +8,7 @@
   "imports": {
     "hono": "https://deno.land/x/hono@v4.3.11/mod.ts",
     "mongo": "https://deno.land/x/mongo@v0.32.0/mod.ts",
-    "ky": "npm:ky@1.7.2",
+    "ky": "npm:ky@1.7.3",
     "deno-dom-wasm": "https://deno.land/x/deno_dom@v0.1.48/deno-dom-wasm.ts",
     "dotenv/": "https://deno.land/x/dotenv@v3.2.2/"
   },
