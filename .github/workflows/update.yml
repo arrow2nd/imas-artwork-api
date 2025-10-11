@@ -16,7 +16,7 @@ jobs:
       - name: Setup deno
         uses: denoland/setup-deno@v1
         with:
-          deno-version: v1.x
+          deno-version: 2.x
 
       - name: Fetch New Artwork Data
         run: deno task update
