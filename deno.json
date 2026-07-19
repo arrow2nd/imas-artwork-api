@@ -7,6 +7,7 @@
   },
   "imports": {
     "hono": "https://deno.land/x/hono@v4.3.11/mod.ts",
+    "hono/middleware": "https://deno.land/x/hono@v4.3.11/middleware.ts",
     "mongo": "https://deno.land/x/mongo@v0.32.0/mod.ts",
     "ky": "npm:ky@2.0.2",
     "deno-dom-wasm": "https://deno.land/x/deno_dom@v0.1.56/deno-dom-wasm.ts",

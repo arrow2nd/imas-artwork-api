@@ -1,8 +1,12 @@
 import { Hono } from "hono";
+import { cors } from "hono/middleware";
 import { router } from "./libs/router.ts";
 import { createError } from "./libs/util.ts";
 
 const app = new Hono();
+
+// 公開APIとしてどのオリジンからも叩けるようにする
+app.use("*", cors());
 
 app.notFound((ctx) => {
   return ctx.json(createError("Not Found"));
