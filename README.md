@@ -6,7 +6,7 @@
 
 ## エンドポイント
 
-`https://imas-artwork-api.deno.dev/v1/`
+`https://imas-artwork-api.arrow2nd.deno.net/v1/`
 
 ### GET /cd/:id
 
@@ -32,7 +32,7 @@ CD の ID (品番) からアートワークを取得
 リクエスト
 
 ```sh
-curl "https://imas-artwork-api.deno.dev/v1/cd/LACA-15905"
+curl "https://imas-artwork-api.arrow2nd.deno.net/v1/cd/LACA-15905"
 ```
 
 レスポンス
@@ -75,7 +75,7 @@ curl "https://imas-artwork-api.deno.dev/v1/cd/LACA-15905"
 リクエスト
 
 ```sh
-curl "https://imas-artwork-api.deno.dev/v1/list?keyword=%E7%99%BD%E8%8F%8A%E3%81%BB%E3%81%9F%E3%82%8B&order=id&orderby=asc"
+curl "https://imas-artwork-api.arrow2nd.deno.net/v1/list?keyword=%E7%99%BD%E8%8F%8A%E3%81%BB%E3%81%9F%E3%82%8B&order=id&orderby=asc"
 ```
 
 レスポンス
